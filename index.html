@@ -2,63 +2,107 @@
 <html lang="en">
 <head>
 <meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no">
 <title>Pickup Line Generator</title>
 
 <style>
+  * {
+    box-sizing: border-box;
+    -webkit-tap-highlight-color: transparent;
+  }
+
   body {
-    font-family: Arial, sans-serif;
-    background: linear-gradient(135deg, #ff6a88, #ff99ac);
-    height: 100vh;
-    display: flex;
-    justify-content: center;
-    align-items: center;
     margin: 0;
+    height: 100vh;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, sans-serif;
+    background: linear-gradient(135deg, #1e3c72, #2a5298);
+    display: flex;
+    align-items: center;
+    justify-content: center;
   }
 
   .app {
-    background: white;
-    padding: 25px;
-    border-radius: 12px;
-    width: 330px;
-    text-align: center;
-    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+    background: #ffffff;
+    width: 100%;
+    max-width: 420px;
+    min-height: 100vh;
+    padding: 24px;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
   }
 
   h1 {
-    margin-bottom: 15px;
+    text-align: center;
+    margin-bottom: 18px;
+    color: #1e3c72;
+    font-size: 26px;
   }
 
   select {
-    padding: 7px;
-    margin-bottom: 15px;
     width: 100%;
+    padding: 14px;
+    border-radius: 10px;
+    border: 1px solid #d0d7e2;
+    font-size: 16px;
+    margin-bottom: 20px;
+    background: #f9fbff;
   }
 
   .card {
-    background: #f4f4f4;
-    padding: 20px;
-    border-radius: 10px;
-    min-height: 80px;
+    background: #f1f6ff;
+    border-radius: 16px;
+    padding: 28px;
+    text-align: center;
+    font-size: 18px;
+    color: #1e3c72;
+    margin-bottom: 18px;
+    min-height: 140px;
     display: flex;
     align-items: center;
     justify-content: center;
-    margin-bottom: 15px;
-    font-size: 16px;
+  }
+
+  .buttons {
+    display: flex;
+    gap: 12px;
   }
 
   button {
-    padding: 12px;
-    width: 100%;
-    border: none;
-    border-radius: 8px;
-    background: #ff6a88;
-    color: white;
+    flex: 1;
+    padding: 16px;
     font-size: 16px;
+    border-radius: 14px;
+    border: none;
     cursor: pointer;
+    font-weight: 600;
   }
 
-  button:hover {
-    background: #ff4f73;
+  #generateBtn {
+    background: linear-gradient(135deg, #3a7bd5, #00d2ff);
+    color: white;
+  }
+
+  #copyBtn {
+    background: #e8f0ff;
+    color: #1e3c72;
+    border: 1px solid #c9d8ff;
+  }
+
+  button:active {
+    transform: scale(0.97);
+  }
+
+  .copied {
+    background: #4caf50 !important;
+    color: white !important;
+  }
+
+  @media (min-width: 600px) {
+    .app {
+      min-height: auto;
+      border-radius: 20px;
+    }
   }
 </style>
 </head>
@@ -74,55 +118,98 @@
   </select>
 
   <div class="card">
-    <p id="pickupLine">Click the button to get a pickup line 😉</p>
+    <span id="pickupLine">Tap generate to get a smooth line 💙</span>
   </div>
 
-  <button id="generateBtn">Generate</button>
+  <div class="buttons">
+    <button id="generateBtn">Generate</button>
+    <button id="copyBtn">Copy</button>
+  </div>
 </div>
 
 <script>
-  const pickupLines = {
-    en: [
-      "Are you WiFi? Because I feel the connection.",
-      "Do you have a name, or can I call you mine?",
-      "Are you a keyboard? Because you're just my type.",
-      "Is your name Google? Because you have everything I'm searching for.",
-      "Are you made of copper and tellurium? Because you're Cu-Te."
-    ],
-    et: [
-      "Kas su nimi on WiFi? Sest ma tunnen ühendust.",
-      "Kas sul on nimi või võin sind enda omaks kutsuda?",
-      "Kas sa oled klaviatuur? Sest sa oled täpselt minu tüüp.",
-      "Kas su nimi on Google? Sest sa oled kõik, mida ma otsin.",
-      "Kas sa oled väsinud? Sest sa jooksed mu mõtetes kogu aeg."
-    ]
-  };
+const pickupLines = {
+  en: [
+    // Smooth & flirty
+    "You have that calm energy that makes people want to stay.",
+    "I don’t know what it is about you, but you feel like a good idea.",
+    "Talking to you feels easy — and that’s rare.",
+    "You’re not loud, but you’re unforgettable.",
+    "You feel like peace, and that’s attractive.",
+    "You make confidence look gentle.",
+    "You look like someone I’d want to know for a long time.",
+    "I wasn’t planning on smiling today. Then you showed up.",
+    "You feel like the reason someone believes in love again.",
+    "I could listen to you talk about nothing and still enjoy it.",
 
-  const lineText = document.getElementById("pickupLine");
-  const generateBtn = document.getElementById("generateBtn");
-  const languageSelect = document.getElementById("languageSelect");
-  const title = document.getElementById("title");
+    // Classic / fun
+    "Are you WiFi? Because I feel the connection.",
+    "Are you a keyboard? Because you’re just my type.",
+    "Is your name Google? Because you have everything I’m searching for.",
+    "Do you have a name, or can I call you mine?",
+    "Are you made of copper and tellurium? Because you’re Cu-Te."
+  ],
 
-  function updateLanguageUI() {
-    if (languageSelect.value === "et") {
-      title.textContent = "Pick-up lause generaator";
-      generateBtn.textContent = "Genereeri";
-      lineText.textContent = "Vajuta nuppu, et saada pick-up lause 😉";
-    } else {
-      title.textContent = "Pickup Line Generator";
-      generateBtn.textContent = "Generate";
-      lineText.textContent = "Click the button to get a pickup line 😉";
-    }
+  et: [
+    // Sujuvad & flirdid
+    "Sul on selline rahulik energia, mis paneb inimesi jääma.",
+    "Ma ei tea, mis see on, aga sina tundud hea mõttena.",
+    "Sinuga rääkimine on kuidagi… lihtne. Ja see on haruldane.",
+    "Sa pole vali, aga oled meeldejääv.",
+    "Sa tundud nagu rahu — ja see on atraktiivne.",
+    "Sa teed enesekindluse pehmeks.",
+    "Sa näed välja nagu keegi, keda tahaks kaua tunda.",
+    "Ma ei plaaninud täna naeratada. Aga siis ilmusid sina.",
+    "Sa tundud nagu põhjus, miks keegi jälle armastusse usub.",
+    "Ma võiks sind kuulata ka siis, kui sa räägid mitte millestki.",
+
+    // Klassikalised / lõbusad
+    "Kas su nimi on WiFi? Sest ma tunnen ühendust.",
+    "Kas sa oled klaviatuur? Sest sa oled täpselt minu tüüp.",
+    "Kas su nimi on Google? Sest sa oled kõik, mida ma otsin.",
+    "Kas sul on nimi või võin sind enda omaks kutsuda?",
+    "Kas sa oled väsinud? Sest sa jooksed mu mõtetes kogu aeg."
+  ]
+};
+
+const lineText = document.getElementById("pickupLine");
+const generateBtn = document.getElementById("generateBtn");
+const copyBtn = document.getElementById("copyBtn");
+const languageSelect = document.getElementById("languageSelect");
+const title = document.getElementById("title");
+
+function updateLanguageUI() {
+  if (languageSelect.value === "et") {
+    title.textContent = "Pick-up lause generaator";
+    generateBtn.textContent = "Genereeri";
+    copyBtn.textContent = "Kopeeri";
+    lineText.textContent = "Vajuta genereeri, et saada lause 💙";
+  } else {
+    title.textContent = "Pickup Line Generator";
+    generateBtn.textContent = "Generate";
+    copyBtn.textContent = "Copy";
+    lineText.textContent = "Tap generate to get a smooth line 💙";
   }
+}
 
-  generateBtn.addEventListener("click", () => {
-    const lang = languageSelect.value;
-    const lines = pickupLines[lang];
-    const randomIndex = Math.floor(Math.random() * lines.length);
-    lineText.textContent = lines[randomIndex];
-  });
+generateBtn.addEventListener("click", () => {
+  const lang = languageSelect.value;
+  const lines = pickupLines[lang];
+  const randomIndex = Math.floor(Math.random() * lines.length);
+  lineText.textContent = lines[randomIndex];
+});
 
-  languageSelect.addEventListener("change", updateLanguageUI);
+copyBtn.addEventListener("click", () => {
+  navigator.clipboard.writeText(lineText.textContent);
+  copyBtn.classList.add("copied");
+  copyBtn.textContent = "Copied!";
+  setTimeout(() => {
+    copyBtn.classList.remove("copied");
+    updateLanguageUI();
+  }, 1200);
+});
+
+languageSelect.addEventListener("change", updateLanguageUI);
 </script>
 
 </body>
