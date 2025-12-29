@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Pickup Line Generator</title>
+
+<style>
+  body {
+    font-family: Arial, sans-serif;
+    background: linear-gradient(135deg, #ff6a88, #ff99ac);
+    height: 100vh;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+  }
+
+  .app {
+    background: white;
+    padding: 25px;
+    border-radius: 12px;
+    width: 330px;
+    text-align: center;
+    box-shadow: 0 10px 25px rgba(0,0,0,0.2);
+  }
+
+  h1 {
+    margin-bottom: 15px;
+  }
+
+  select {
+    padding: 7px;
+    margin-bottom: 15px;
+    width: 100%;
+  }
+
+  .card {
+    background: #f4f4f4;
+    padding: 20px;
+    border-radius: 10px;
+    min-height: 80px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 15px;
+    font-size: 16px;
+  }
+
+  button {
+    padding: 12px;
+    width: 100%;
+    border: none;
+    border-radius: 8px;
+    background: #ff6a88;
+    color: white;
+    font-size: 16px;
+    cursor: pointer;
+  }
+
+  button:hover {
+    background: #ff4f73;
+  }
+</style>
+</head>
+
+<body>
+
+<div class="app">
+  <h1 id="title">Pickup Line Generator</h1>
+
+  <select id="languageSelect">
+    <option value="en">English</option>
+    <option value="et">Eesti</option>
+  </select>
+
+  <div class="card">
+    <p id="pickupLine">Click the button to get a pickup line 😉</p>
+  </div>
+
+  <button id="generateBtn">Generate</button>
+</div>
+
+<script>
+  const pickupLines = {
+    en: [
+      "Are you WiFi? Because I feel the connection.",
+      "Do you have a name, or can I call you mine?",
+      "Are you a keyboard? Because you're just my type.",
+      "Is your name Google? Because you have everything I'm searching for.",
+      "Are you made of copper and tellurium? Because you're Cu-Te."
+    ],
+    et: [
+      "Kas su nimi on WiFi? Sest ma tunnen ühendust.",
+      "Kas sul on nimi või võin sind enda omaks kutsuda?",
+      "Kas sa oled klaviatuur? Sest sa oled täpselt minu tüüp.",
+      "Kas su nimi on Google? Sest sa oled kõik, mida ma otsin.",
+      "Kas sa oled väsinud? Sest sa jooksed mu mõtetes kogu aeg."
+    ]
+  };
+
+  const lineText = document.getElementById("pickupLine");
+  const generateBtn = document.getElementById("generateBtn");
+  const languageSelect = document.getElementById("languageSelect");
+  const title = document.getElementById("title");
+
+  function updateLanguageUI() {
+    if (languageSelect.value === "et") {
+      title.textContent = "Pick-up lause generaator";
+      generateBtn.textContent = "Genereeri";
+      lineText.textContent = "Vajuta nuppu, et saada pick-up lause 😉";
+    } else {
+      title.textContent = "Pickup Line Generator";
+      generateBtn.textContent = "Generate";
+      lineText.textContent = "Click the button to get a pickup line 😉";
+    }
+  }
+
+  generateBtn.addEventListener("click", () => {
+    const lang = languageSelect.value;
+    const lines = pickupLines[lang];
+    const randomIndex = Math.floor(Math.random() * lines.length);
+    lineText.textContent = lines[randomIndex];
+  });
+
+  languageSelect.addEventListener("change", updateLanguageUI);
+</script>
+
+</body>
+</html>
